@@ -1,6 +1,7 @@
 version: "3"
 services:
   node:
+
     image: heikkis/zyxelmodemrestart
     network_mode: "host"
     environment:
