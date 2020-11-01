@@ -1,0 +1,17 @@
+version: "3"
+services:
+  node:
+    image: heikkis/zyxelmodemrestart
+    network_mode: "host"
+    environment:
+      ZYXEL_IP_ADDRESS: 10.0.0.1
+      USERNAME: admin
+      PASSWORD: yourPassword
+      SMTP_SERVER: smtp.ispprovider.mine
+      SMTP_SERVER_PORT: 25
+      EMAIL_RECIPIENT: your@email.address
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "5"
