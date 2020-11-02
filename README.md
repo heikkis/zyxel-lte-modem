@@ -8,4 +8,4 @@ Here is short guide how im using this:
 
 There is a build for each two platforms: arm64 (my setup) and amd64 (normal x86).
 
-https://hub.docker.com/repository/docker/heikkis/zyxel-lte-modem 
+https://hub.docker.com/r/heikkis/zyxel-lte-modem
