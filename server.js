@@ -8,9 +8,7 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
             console.log("START " + new Date().toISOString())
             console.log("Latest failures: " + JSON.stringify(lastFailureDates))
 
-            let pingres = await pingGoogleDNS();
-            if (!pingres.alive) {
-                console.log("ERROR: " + JSON.stringify(pingres))
+            if (!pingGoogleDNS()) {
                 if (lastFailureDates.length > 10) {
                     lastFailureDates = lastFailureDates.slice(lastFailureDates.length - 10)
                 }
@@ -20,9 +18,8 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
                 await login();
                 await reboot();
 
-                await new Promise(resolve => setTimeout(resolve, 60000));
-                pingres = await pingGoogleDNS();
-                if (pingres.alive) {
+                await new Promise(resolve => setTimeout(resolve, 90*1000));
+                if (pingGoogleDNS()) {
                     await sendEmailNotification(JSON.stringify(lastFailureDates));
                 }
             }

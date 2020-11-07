@@ -6,6 +6,10 @@ const ping = require('ping');
 const {zyxelUrl} = require("./settings");
 
 const nodemailer = require("nodemailer");
+const {pingHostsString} = require("./settings");
+const {pingMaxTrycount} = require("./settings");
+const {pingWaitBetweenTriesSeconds} = require("./settings");
+const {pingTryTimeoutSeconds} = require("./settings");
 const {emailRecipient} = require("./settings");
 const {smtpserverport} = require("./settings");
 const {smtpserver} = require("./settings");
@@ -33,6 +37,7 @@ async function login() {
 
     await makeReqAndCheckResult(body, responseField)
 }
+
 async function reboot() {
     const body = "{\"action\":\"set_system_reboot\"}";
     const responseField = "set_system_reboot";
@@ -50,7 +55,7 @@ async function makeReqAndCheckResult(body, responseField) {
     });
     const output = await res.json()
     if (output[responseField]["errno"] != 0) {
-        console.error("ERROR: " + JSON.stringify(output)+ JSON.stringify(res))
+        console.error("ERROR: " + JSON.stringify(output) + JSON.stringify(res))
     } else {
         console.log("OK: " + JSON.stringify(output) + JSON.stringify(res))
     }
@@ -68,14 +73,23 @@ async function manualModeDisconnect() {
     await makeReqAndCheckResult(body, responseField)
 }
 
-async function pingGoogleDNS() {
-    return ping.promise.probe("8.8.8.8", {
-        timeout: 3, // Timeout in seconds for each ping request
-        extra: [
-            '-o', // Exit successfully after receiving one reply packet.
-            '-c', '5', // Number of tries.
-            '-i', '2']  // Wait seconds between sending each packet.
+const testHosts = pingHostsString.split(" ")
+async function isInternetConnectionAlive() {
+    const promises = testHosts.map(host => {
+        return ping.promise.probe(host, {
+            timeout: pingTryTimeoutSeconds, // Timeout in seconds for each ping request
+            extra: [
+                '-o',
+                '-c', pingMaxTrycount, // Number of tries.
+                '-i', pingWaitBetweenTriesSeconds]  // Wait seconds between sending each packet.
+        })
     })
+
+    const results = await Promise.all(promises);
+
+    return results.filter(res => {
+        return res.alive
+    }).length > 0
 }
 
 const transporter = nodemailer.createTransport({
@@ -93,4 +107,5 @@ async function sendEmailNotification(message) {
     });
 
 }
-module.exports = {login, manualModeConnect, manualModeDisconnect, pingGoogleDNS, sendEmailNotification, reboot}
+
+module.exports = {login, manualModeConnect, manualModeDisconnect, pingGoogleDNS: isInternetConnectionAlive, sendEmailNotification, reboot}

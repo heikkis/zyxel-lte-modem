@@ -11,6 +11,10 @@ services:
       SMTP_SERVER: smtp.ispprovider.mine
       SMTP_SERVER_PORT: 25
       EMAIL_RECIPIENT: your@email.address
+      PING_MAX_TRY_COUNT: 20
+      PING_TRY_TIMEOUT_SECONDS: 2.0
+      PING_WAIT_BETWEEN_TRIES_SECONDS: 0.1
+      PING_HOSTS_STRING: "8.8.8.8 8.8.4.4."
     deploy:
       restart_policy:
         condition: always

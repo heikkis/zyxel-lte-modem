@@ -1,4 +1,4 @@
 node_modules
 .idea
-docker-compose-private.yml
-docker-compose-private-build.yml
+docker-compose-private*.yml
+*.iml
