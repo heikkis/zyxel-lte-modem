@@ -70,8 +70,11 @@ async function manualModeDisconnect() {
 
 async function pingGoogleDNS() {
     return ping.promise.probe("8.8.8.8", {
-        timeout: 3,
-        extra: ['-c', '4', '-i', '1']
+        timeout: 3, // Timeout in seconds for each ping request
+        extra: [
+            '-o', // Exit successfully after receiving one reply packet.
+            '-c', '5', // Number of tries.
+            '-i', '2']  // Wait seconds between sending each packet.
     })
 }
 
