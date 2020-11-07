@@ -33,6 +33,12 @@ async function login() {
 
     await makeReqAndCheckResult(body, responseField)
 }
+async function reboot() {
+    const body = "{\"action\":\"set_system_reboot\"}";
+    const responseField = "set_system_reboot";
+
+    await makeReqAndCheckResult(body, responseField)
+}
 
 async function makeReqAndCheckResult(body, responseField) {
     const res = await fetch(zyxelUrl + "/cgi-bin/gui.cgi", {
@@ -44,9 +50,9 @@ async function makeReqAndCheckResult(body, responseField) {
     });
     const output = await res.json()
     if (output[responseField]["errno"] != 0) {
-        console.error("ERROR: " + JSON.stringify(output))
+        console.error("ERROR: " + JSON.stringify(output)+ JSON.stringify(res))
     } else {
-        console.log("OK: " + JSON.stringify(output))
+        console.log("OK: " + JSON.stringify(output) + JSON.stringify(res))
     }
 }
 
@@ -64,11 +70,10 @@ async function manualModeDisconnect() {
 
 async function pingGoogleDNS() {
     return ping.promise.probe("8.8.8.8", {
-        timeout: 5,
+        timeout: 3,
         extra: ['-c', '4', '-i', '1']
     })
 }
-
 
 const transporter = nodemailer.createTransport({
     host: smtpserver,
@@ -76,13 +81,13 @@ const transporter = nodemailer.createTransport({
     secure: false
 });
 
-async function sendEmailNotification() {
+async function sendEmailNotification(message) {
     let info = await transporter.sendMail({
         from: emailRecipient,
         to: emailRecipient,
         subject: "Zyxel restarted",
-        text: "Zyxel restarted"
+        text: message
     });
 
 }
-module.exports = {login, manualModeConnect, manualModeDisconnect, pingGoogleDNS, sendEmailNotification}
+module.exports = {login, manualModeConnect, manualModeDisconnect, pingGoogleDNS, sendEmailNotification, reboot}

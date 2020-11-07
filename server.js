@@ -1,3 +1,4 @@
+const {reboot} = require("./library");
 const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pingGoogleDNS} = require("./library");
 
 (async () => {
@@ -16,13 +17,12 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
             lastFailureDates.push(new Date().toISOString())
 
             await login();
-            await manualModeDisconnect();
-            await manualModeConnect();
+            await reboot();
 
-            await new Promise(resolve => setTimeout(resolve, 10000));
+            await new Promise(resolve => setTimeout(resolve, 60000));
             pingres = await pingGoogleDNS();
             if (pingres.alive) {
-                await sendEmailNotification();
+                await sendEmailNotification(JSON.stringify(lastFailureDates));
             }
         }
         console.log("END")

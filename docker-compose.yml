@@ -11,6 +11,9 @@ services:
       SMTP_SERVER: smtp.ispprovider.mine
       SMTP_SERVER_PORT: 25
       EMAIL_RECIPIENT: your@email.address
+    deploy:
+      restart_policy:
+        condition: on-failure
     logging:
       driver: "json-file"
       options:
