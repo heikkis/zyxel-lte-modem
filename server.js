@@ -17,7 +17,7 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
                 lastFailureDates.push(new Date().toISOString())
 
                 await login();
-                //await reboot();
+                await reboot();
 
                 await new Promise(resolve => setTimeout(resolve, 90*1000));
                 if (await isInternetConnectionAlive()) {
