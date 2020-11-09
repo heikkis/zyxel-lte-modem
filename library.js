@@ -2,14 +2,11 @@ const {password, username} = require("./settings");
 
 const nodeFetch = require('node-fetch');
 const fetch = require('fetch-cookie')(nodeFetch);
-const ping = require('ping');
 const {zyxelUrl} = require("./settings");
 
 const nodemailer = require("nodemailer");
-const {pingHostsString} = require("./settings");
-const {pingMaxTrycount} = require("./settings");
-const {pingWaitBetweenTriesSeconds} = require("./settings");
-const {pingTryTimeoutSeconds} = require("./settings");
+const checkInternetConnected = require("./checkInternetConnection");
+const {testConnectionUrls} = require("./settings");
 const {emailRecipient} = require("./settings");
 const {smtpserverport} = require("./settings");
 const {smtpserver} = require("./settings");
@@ -73,22 +70,21 @@ async function manualModeDisconnect() {
     await makeReqAndCheckResult(body, responseField)
 }
 
-const testHosts = pingHostsString.split(" ")
+const testUrlArray = testConnectionUrls.split(" ")
+
 async function isInternetConnectionAlive() {
-    const promises = testHosts.map(host => {
-        return ping.promise.probe(host, {
-            timeout: pingTryTimeoutSeconds, // Timeout in seconds for each ping request
-            extra: [
-                '-o',
-                '-c', pingMaxTrycount, // Number of tries.
-                '-i', pingWaitBetweenTriesSeconds]  // Wait seconds between sending each packet.
+    const promises = testUrlArray.map(url => {
+        return checkInternetConnected({
+            timeout: 5000, //timeout connecting to each server, each try
+            retries: 3, // number of retries to do before failing
+            domain: url //the domain to check DNS record of
         })
     })
 
     const results = await Promise.all(promises);
 
-    return results.filter(res => {
-        return res.alive
+    return results.filter((res) => {
+        return res
     }).length > 0
 }
 
@@ -108,4 +104,4 @@ async function sendEmailNotification(message) {
 
 }
 
-module.exports = {login, manualModeConnect, manualModeDisconnect, pingGoogleDNS: isInternetConnectionAlive, sendEmailNotification, reboot}
+module.exports = {login, manualModeConnect, manualModeDisconnect, isInternetConnectionAlive, sendEmailNotification, reboot}

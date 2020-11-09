@@ -1,3 +1,4 @@
+const {isInternetConnectionAlive} = require("./library");
 const {reboot} = require("./library");
 const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pingGoogleDNS} = require("./library");
 
@@ -7,8 +8,8 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
         while (true) {
             console.log("START " + new Date().toISOString())
             console.log("Latest failures: " + JSON.stringify(lastFailureDates))
-
-            if (!pingGoogleDNS()) {
+            if (false == (await isInternetConnectionAlive())) {
+                console.log("ERROR")
                 if (lastFailureDates.length > 10) {
                     lastFailureDates = lastFailureDates.slice(lastFailureDates.length - 10)
                 }
@@ -16,10 +17,10 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
                 lastFailureDates.push(new Date().toISOString())
 
                 await login();
-                await reboot();
+                //await reboot();
 
                 await new Promise(resolve => setTimeout(resolve, 90*1000));
-                if (pingGoogleDNS()) {
+                if (await isInternetConnectionAlive()) {
                     await sendEmailNotification(JSON.stringify(lastFailureDates));
                 }
             }

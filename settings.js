@@ -6,11 +6,7 @@ const smtpserver = process.env.SMTP_SERVER;
 const smtpserverport = process.env.SMTP_SERVER_PORT || "25";
 const emailRecipient = process.env.EMAIL_RECIPIENT;
 
-const pingMaxTrycount = process.env.PING_MAX_TRY_COUNT || "20";
-const pingTryTimeoutSeconds = process.env.PING_TRY_TIMEOUT_SECONDS || "2.0";
-const pingWaitBetweenTriesSeconds = process.env.PING_WAIT_BETWEEN_TRIES_SECONDS || "0.1";
-
-const pingHostsString = process.env.PING_HOSTS_STRING || "8.8.8.8 8.8.4.4 ping.funet.fi ns.funet.fi"
+const testConnectionUrls = process.env.TEST_CONNECTION_URLS_STRING || "https://yle.fi https://www.microsoft.com https://google.com https://aws.amazon.com"
 
 console.log(
     `
@@ -20,10 +16,7 @@ password: ${password}
 smtpserver: ${smtpserver}
 smtpserverport: ${smtpserverport}
 emailRecipient: ${emailRecipient}
-pingMaxTrycount: ${pingMaxTrycount}
-pingTryTimeoutSeconds: ${pingTryTimeoutSeconds}
-pingWaitBetweenTriesSeconds: ${pingWaitBetweenTriesSeconds}
-pingHostsString: ${pingHostsString}
+testConnectionUrls: ${testConnectionUrls}
 `);
 
 module.exports = {
@@ -33,8 +26,5 @@ module.exports = {
     smtpserver,
     smtpserverport,
     emailRecipient,
-    pingMaxTrycount,
-    pingTryTimeoutSeconds,
-    pingWaitBetweenTriesSeconds,
-    pingHostsString
+    testConnectionUrls
 }
