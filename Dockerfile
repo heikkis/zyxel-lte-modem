@@ -8,3 +8,4 @@ WORKDIR /home/node/app
 CMD npm start
 
 ADD --chown=node:node . /home/node/app
+RUN npm i

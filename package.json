@@ -4,7 +4,7 @@
   "description": "Auto restart Zyxel modem connection if ping fails",
   "main": "server.js",
   "scripts": {
-    "start": "npm i && node server.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
