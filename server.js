@@ -21,7 +21,7 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
 
                 await new Promise(resolve => setTimeout(resolve, 90*1000));
                 if (await isInternetConnectionAlive()) {
-                    await sendEmailNotification(JSON.stringify(lastFailureDates));
+                    await sendEmailNotification("Internet connection has been restarted", JSON.stringify(lastFailureDates));
                 }
             }
             console.log("END")
@@ -29,7 +29,7 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
             await new Promise(resolve => setTimeout(resolve, 15000));
         }
     } catch(e) {
-        await sendEmailNotification(JSON.stringify(e));
+        await sendEmailNotification("Internet connection monitor ERROR", JSON.stringify(e));
         throw e
     }
 })();

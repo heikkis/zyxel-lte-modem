@@ -94,11 +94,11 @@ const transporter = nodemailer.createTransport({
     secure: false
 });
 
-async function sendEmailNotification(message) {
+async function sendEmailNotification(subject, message) {
     let info = await transporter.sendMail({
         from: emailRecipient,
         to: emailRecipient,
-        subject: "Zyxel restarted",
+        subject: subject,
         text: message
     });
 
