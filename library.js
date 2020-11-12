@@ -76,7 +76,7 @@ async function isInternetConnectionAlive() {
     const promises = testUrlArray.map(url => {
         return checkInternetConnected({
             timeout: 5000, //timeout connecting to each server, each try
-            retries: 3, // number of retries to do before failing
+            retries: 12, // number of retries to do before failing
             domain: url //the domain to check DNS record of
         })
     })
