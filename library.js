@@ -95,12 +95,16 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendEmailNotification(subject, message) {
-    let info = await transporter.sendMail({
-        from: emailRecipient,
-        to: emailRecipient,
-        subject: subject,
-        text: message
-    });
+    try {
+        let info = await transporter.sendMail({
+            from: emailRecipient,
+            to: emailRecipient,
+            subject: subject,
+            text: message
+        });
+    } catch (e) {
+        console.log(e, subject, message)
+    }
 
 }
 

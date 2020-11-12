@@ -30,6 +30,5 @@ const {sendEmailNotification, login, manualModeConnect, manualModeDisconnect, pi
         }
     } catch(e) {
         await sendEmailNotification("Internet connection monitor ERROR", JSON.stringify(e));
-        throw e
     }
 })();
